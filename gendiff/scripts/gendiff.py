@@ -18,12 +18,13 @@ def format_value(value):
 def build_diff(data1, data2):
     """Строит словарь различий между двумя словарями."""
     diff = {}
+    all_keys = sorted(set(data1.keys()) | set(data2.keys()))
 
-    for key in data1.keys():
-        if key == 'follow':
+    for key in all_keys:
+        if key not in data1:
             diff[key] = {
-                'status': 'unchanged',
-                'value': data1[key]
+                'status': 'added',
+                'value': data2[key]
             }
         elif key not in data2:
             diff[key] = {
@@ -42,40 +43,11 @@ def build_diff(data1, data2):
                 'value': data1[key]
             }
 
-    for key in data2.keys():
-        if key not in data1 and key != 'follow':
-            diff[key] = {
-                'status': 'added',
-                'value': data2[key]
-            }
-
     return diff
 
 
-def format_stylish_original(diff):
-    """Форматирует с сохранением порядка ключей."""
-    lines = ['{']
-
-    for key in diff.keys():
-        value = diff[key]
-        status = value['status']
-
-        if status == 'added':
-            lines.append(f"  + {key}: {format_value(value['value'])}")
-        elif status == 'removed':
-            lines.append(f"  - {key}: {format_value(value['value'])}")
-        elif status == 'changed':
-            lines.append(f"  - {key}: {format_value(value['old_value'])}")
-            lines.append(f"  + {key}: {format_value(value['new_value'])}")
-        else:
-            lines.append(f"    {key}: {format_value(value['value'])}")
-
-    lines.append('}')
-    return '\n'.join(lines)
-
-
-def format_stylish_sorted(diff):
-    """Форматирует словарь различий в стиле stylish с сортировкой."""
+def format_stylish(diff):
+    """Форматирует словарь различий в стиле stylish."""
     lines = ['{']
 
     for key in sorted(diff.keys()):
@@ -89,7 +61,7 @@ def format_stylish_sorted(diff):
         elif status == 'changed':
             lines.append(f"  - {key}: {format_value(value['old_value'])}")
             lines.append(f"  + {key}: {format_value(value['new_value'])}")
-        else:
+        else:  # unchanged
             lines.append(f"    {key}: {format_value(value['value'])}")
 
     lines.append('}')
@@ -102,11 +74,7 @@ def generate_diff(file_path1, file_path2):
     data2 = read_json(file_path2)
 
     diff = build_diff(data1, data2)
-
-    if data1 == data2:
-        return format_stylish_sorted(diff)
-    else:
-        return format_stylish_original(diff)
+    return format_stylish(diff)
 
 
 def main():

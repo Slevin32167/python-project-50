@@ -8,15 +8,15 @@ def test_generate_diff_flat_json():
     result = generate_diff('tests/fixtures/file1.json', 'tests/fixtures/file2.json')
     
     expected = """{
+  - follow: false
     host: hexlet.io
+  - proxy: 123.234.53.22
   - timeout: 50
   + timeout: 20
-  - proxy: 123.234.53.22
-    follow: false
   + verbose: true
 }"""
     
-    assert result.strip() == expected.strip()
+    assert result == expected
 
 
 def test_generate_diff_identical_files():
@@ -30,4 +30,4 @@ def test_generate_diff_identical_files():
     timeout: 50
 }"""
     
-    assert result.strip() == expected.strip()
+    assert result == expected
