@@ -26,6 +26,7 @@ jobs:
     - name: Install dependencies
       run: |
         uv sync
+        uv add --dev flake8 pytest pytest-cov
 
     - name: Run linter
       run: |
