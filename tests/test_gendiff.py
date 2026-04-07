@@ -30,6 +30,16 @@ def test_generate_diff_flat_json():
     assert result == expected
 
 
+def test_generate_diff_flat_yml():
+    """Тест сравнения плоских YAML файлов."""
+    result = generate_diff(
+        get_fixture_path('file1.yml'),
+        get_fixture_path('file2.yml')
+    )
+    expected = read_file(get_expected_path('expected_flat.txt'))
+    assert result == expected
+
+
 def test_generate_diff_identical_files():
     """Тест сравнения одинаковых файлов."""
     result = generate_diff(

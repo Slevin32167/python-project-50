@@ -1,11 +1,5 @@
 import argparse
-import json
-
-
-def read_json(file_path):
-    """Читает JSON файл и возвращает словарь."""
-    with open(file_path, 'r') as f:
-        return json.load(f)
+from gendiff.parser import parse_file
 
 
 def format_value(value):
@@ -70,8 +64,8 @@ def format_stylish(diff):
 
 def generate_diff(file_path1, file_path2):
     """Сравнивает два файла конфигурации и возвращает разницу."""
-    data1 = read_json(file_path1)
-    data2 = read_json(file_path2)
+    data1 = parse_file(file_path1)
+    data2 = parse_file(file_path2)
 
     diff = build_diff(data1, data2)
     return format_stylish(diff)
