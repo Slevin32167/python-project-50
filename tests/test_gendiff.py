@@ -21,7 +21,7 @@ def get_expected_path(filename):
 
 
 def test_generate_diff_flat_json():
-    """Тест сравнения плоских JSON файлов."""
+    """Тест сравнения плоских JSON файлов (stylish)."""
     result = generate_diff(
         get_fixture_path('file1.json'),
         get_fixture_path('file2.json')
@@ -31,7 +31,7 @@ def test_generate_diff_flat_json():
 
 
 def test_generate_diff_flat_yml():
-    """Тест сравнения плоских YAML файлов."""
+    """Тест сравнения плоских YAML файлов (stylish)."""
     result = generate_diff(
         get_fixture_path('file1.yml'),
         get_fixture_path('file2.yml')
@@ -40,23 +40,47 @@ def test_generate_diff_flat_yml():
     assert result == expected
 
 
-def test_generate_diff_nested_json():
-    """Тест сравнения вложенных JSON файлов."""
+def test_generate_diff_nested_json_stylish():
+    """Тест сравнения вложенных JSON файлов (stylish)."""
     result = generate_diff(
         get_fixture_path('file1_nested.json'),
-        get_fixture_path('file2_nested.json')
+        get_fixture_path('file2_nested.json'),
+        'stylish'
     )
     expected = read_file(get_expected_path('expected_nested.txt'))
     assert result == expected
 
 
-def test_generate_diff_nested_yml():
-    """Тест сравнения вложенных YAML файлов."""
+def test_generate_diff_nested_yml_stylish():
+    """Тест сравнения вложенных YAML файлов (stylish)."""
     result = generate_diff(
         get_fixture_path('file1_nested.yml'),
-        get_fixture_path('file2_nested.yml')
+        get_fixture_path('file2_nested.yml'),
+        'stylish'
     )
     expected = read_file(get_expected_path('expected_nested.txt'))
+    assert result == expected
+
+
+def test_generate_diff_nested_json_plain():
+    """Тест сравнения вложенных JSON файлов (plain)."""
+    result = generate_diff(
+        get_fixture_path('file1_nested.json'),
+        get_fixture_path('file2_nested.json'),
+        'plain'
+    )
+    expected = read_file(get_expected_path('expected_plain.txt'))
+    assert result == expected
+
+
+def test_generate_diff_nested_yml_plain():
+    """Тест сравнения вложенных YAML файлов (plain)."""
+    result = generate_diff(
+        get_fixture_path('file1_nested.yml'),
+        get_fixture_path('file2_nested.yml'),
+        'plain'
+    )
+    expected = read_file(get_expected_path('expected_plain.txt'))
     assert result == expected
 
 

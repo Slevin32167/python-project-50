@@ -4,22 +4,7 @@
 
 import argparse
 from gendiff.parser import parse_file
-
-
-def format_value(value, depth=0):
-    """Форматирует значение для вывода с учетом глубины."""
-    if isinstance(value, bool):
-        return str(value).lower()
-    if isinstance(value, dict):
-        indent = '    ' * depth
-        lines = ['{']
-        for k, v in value.items():
-            lines.append(
-                f"{indent}    {k}: {format_value(v, depth + 1)}"
-            )
-        lines.append(f"{indent}}}")
-        return '\n'.join(lines)
-    return value
+from gendiff.formatters import format_stylish, format_plain
 
 
 def build_diff(data1, data2):
@@ -61,40 +46,17 @@ def build_diff(data1, data2):
     return diff
 
 
-def format_stylish(diff, depth=0):
-    """Форматирует словарь различий в стиле stylish."""
-    indent = '    ' * depth
-    lines = ['{']
-
-    for key, value in diff.items():
-        status = value['status']
-        current_indent = indent + '  '
-
-        if status == 'nested':
-            children = format_stylish(value['children'], depth + 1)
-            lines.append(f"{current_indent}{key}: {children}")
-        elif status == 'added':
-            val = format_value(value['value'], depth + 1)
-            lines.append(f"{current_indent}+ {key}: {val}")
-        elif status == 'removed':
-            val = format_value(value['value'], depth + 1)
-            lines.append(f"{current_indent}- {key}: {val}")
-        elif status == 'changed':
-            old_val = format_value(value['old_value'], depth + 1)
-            new_val = format_value(value['new_value'], depth + 1)
-            lines.append(f"{current_indent}- {key}: {old_val}")
-            lines.append(f"{current_indent}+ {key}: {new_val}")
-        else:  # unchanged
-            val = format_value(value['value'], depth + 1)
-            lines.append(f"{current_indent}  {key}: {val}")
-
-    lines.append(indent + '}')
-    return '\n'.join(lines)
-
-
 def generate_diff(file_path1, file_path2, format_name='stylish'):
     """
     Сравнивает два файла конфигурации и возвращает разницу.
+
+    Args:
+        file_path1: путь к первому файлу
+        file_path2: путь ко второму файлу
+        format_name: формат вывода ('stylish' или 'plain')
+
+    Returns:
+        str: отформатированная разница
     """
     data1 = parse_file(file_path1)
     data2 = parse_file(file_path2)
@@ -103,6 +65,8 @@ def generate_diff(file_path1, file_path2, format_name='stylish'):
 
     if format_name == 'stylish':
         return format_stylish(diff)
+    elif format_name == 'plain':
+        return format_plain(diff)
     else:
         raise ValueError(f"Unsupported format: {format_name}")
 
