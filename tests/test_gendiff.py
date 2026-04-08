@@ -40,6 +40,26 @@ def test_generate_diff_flat_yml():
     assert result == expected
 
 
+def test_generate_diff_nested_json():
+    """Тест сравнения вложенных JSON файлов."""
+    result = generate_diff(
+        get_fixture_path('file1_nested.json'),
+        get_fixture_path('file2_nested.json')
+    )
+    expected = read_file(get_expected_path('expected_nested.txt'))
+    assert result == expected
+
+
+def test_generate_diff_nested_yml():
+    """Тест сравнения вложенных YAML файлов."""
+    result = generate_diff(
+        get_fixture_path('file1_nested.yml'),
+        get_fixture_path('file2_nested.yml')
+    )
+    expected = read_file(get_expected_path('expected_nested.txt'))
+    assert result == expected
+
+
 def test_generate_diff_identical_files():
     """Тест сравнения одинаковых файлов."""
     result = generate_diff(

@@ -1,16 +1,31 @@
+"""
+Вычислитель отличий между конфигурационными файлами.
+"""
+
 import argparse
 from gendiff.parser import parse_file
 
 
-def format_value(value):
-    """Форматирует значение для вывода."""
+def format_value(value, depth=0):
+    """Форматирует значение для вывода с учетом глубины."""
     if isinstance(value, bool):
         return str(value).lower()
+    if isinstance(value, dict):
+        indent = '    ' * depth
+        lines = ['{']
+        for k, v in value.items():
+            lines.append(
+                f"{indent}    {k}: {format_value(v, depth + 1)}"
+            )
+        lines.append(f"{indent}}}")
+        return '\n'.join(lines)
     return value
 
 
 def build_diff(data1, data2):
-    """Строит словарь различий между двумя словарями."""
+    """
+    Рекурсивно строит словарь различий между двумя структурами данных.
+    """
     diff = {}
     all_keys = sorted(set(data1.keys()) | set(data2.keys()))
 
@@ -24,6 +39,12 @@ def build_diff(data1, data2):
             diff[key] = {
                 'status': 'removed',
                 'value': data1[key]
+            }
+        elif (isinstance(data1[key], dict)
+                and isinstance(data2[key], dict)):
+            diff[key] = {
+                'status': 'nested',
+                'children': build_diff(data1[key], data2[key])
             }
         elif data1[key] != data2[key]:
             diff[key] = {
@@ -40,35 +61,50 @@ def build_diff(data1, data2):
     return diff
 
 
-def format_stylish(diff):
+def format_stylish(diff, depth=0):
     """Форматирует словарь различий в стиле stylish."""
+    indent = '    ' * depth
     lines = ['{']
 
-    for key in sorted(diff.keys()):
-        value = diff[key]
+    for key, value in diff.items():
         status = value['status']
+        current_indent = indent + '  '
 
-        if status == 'added':
-            lines.append(f"  + {key}: {format_value(value['value'])}")
+        if status == 'nested':
+            children = format_stylish(value['children'], depth + 1)
+            lines.append(f"{current_indent}{key}: {children}")
+        elif status == 'added':
+            val = format_value(value['value'], depth + 1)
+            lines.append(f"{current_indent}+ {key}: {val}")
         elif status == 'removed':
-            lines.append(f"  - {key}: {format_value(value['value'])}")
+            val = format_value(value['value'], depth + 1)
+            lines.append(f"{current_indent}- {key}: {val}")
         elif status == 'changed':
-            lines.append(f"  - {key}: {format_value(value['old_value'])}")
-            lines.append(f"  + {key}: {format_value(value['new_value'])}")
+            old_val = format_value(value['old_value'], depth + 1)
+            new_val = format_value(value['new_value'], depth + 1)
+            lines.append(f"{current_indent}- {key}: {old_val}")
+            lines.append(f"{current_indent}+ {key}: {new_val}")
         else:  # unchanged
-            lines.append(f"    {key}: {format_value(value['value'])}")
+            val = format_value(value['value'], depth + 1)
+            lines.append(f"{current_indent}  {key}: {val}")
 
-    lines.append('}')
+    lines.append(indent + '}')
     return '\n'.join(lines)
 
 
-def generate_diff(file_path1, file_path2):
-    """Сравнивает два файла конфигурации и возвращает разницу."""
+def generate_diff(file_path1, file_path2, format_name='stylish'):
+    """
+    Сравнивает два файла конфигурации и возвращает разницу.
+    """
     data1 = parse_file(file_path1)
     data2 = parse_file(file_path2)
 
     diff = build_diff(data1, data2)
-    return format_stylish(diff)
+
+    if format_name == 'stylish':
+        return format_stylish(diff)
+    else:
+        raise ValueError(f"Unsupported format: {format_name}")
 
 
 def main():
@@ -88,7 +124,7 @@ def main():
 
     args = parser.parse_args()
 
-    diff = generate_diff(args.first_file, args.second_file)
+    diff = generate_diff(args.first_file, args.second_file, args.format)
     print(diff)
 
 
