@@ -10,7 +10,7 @@ def format_stylish(diff, depth=0):
 
     for key, value in diff.items():
         status = value['status']
-        
+
         if status == 'nested':
             current_indent = indent + '    '
             children = format_stylish(value['children'], depth + 1)
