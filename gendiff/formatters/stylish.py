@@ -5,13 +5,13 @@ from gendiff.formatters.utils import format_value
 
 def format_stylish(diff, depth=0):
     """Форматирует словарь различий в стиле stylish."""
-    indent = '  ' * depth
+    indent = '    ' * depth
     lines = ['{']
 
     for key, value in diff.items():
         status = value['status']
         # Для всех элементов используем одинаковый отступ
-        current_indent = indent + '  '
+        current_indent = indent + '    '
 
         if status == 'nested':
             children = format_stylish(value['children'], depth + 1)
