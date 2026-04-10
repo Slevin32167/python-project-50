@@ -1,10 +1,11 @@
+#!/usr/bin/env python3
 """
 Вычислитель отличий между конфигурационными файлами.
 """
 
 import argparse
 from gendiff.parser import parse_file
-from gendiff.formatters import format_stylish, format_plain
+from gendiff.formatters import format_stylish, format_plain, format_json
 
 
 def build_diff(data1, data2):
@@ -53,7 +54,7 @@ def generate_diff(file_path1, file_path2, format_name='stylish'):
     Args:
         file_path1: путь к первому файлу
         file_path2: путь ко второму файлу
-        format_name: формат вывода ('stylish' или 'plain')
+        format_name: формат вывода ('stylish', 'plain', 'json')
 
     Returns:
         str: отформатированная разница
@@ -67,6 +68,8 @@ def generate_diff(file_path1, file_path2, format_name='stylish'):
         return format_stylish(diff)
     elif format_name == 'plain':
         return format_plain(diff)
+    elif format_name == 'json':
+        return format_json(diff)
     else:
         raise ValueError(f"Unsupported format: {format_name}")
 

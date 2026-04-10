@@ -92,3 +92,25 @@ def test_generate_diff_identical_files():
     )
     expected = read_file(get_expected_path('expected_identical.txt'))
     assert result == expected
+
+
+def test_generate_diff_nested_json_json():
+    """Тест сравнения вложенных JSON файлов (json формат)."""
+    result = generate_diff(
+        get_fixture_path('file1_nested.json'),
+        get_fixture_path('file2_nested.json'),
+        'json'
+    )
+    expected = read_file(get_expected_path('expected_json.txt'))
+    assert result == expected
+
+
+def test_generate_diff_nested_yml_json():
+    """Тест сравнения вложенных YAML файлов (json формат)."""
+    result = generate_diff(
+        get_fixture_path('file1_nested.yml'),
+        get_fixture_path('file2_nested.yml'),
+        'json'
+    )
+    expected = read_file(get_expected_path('expected_json.txt'))
+    assert result == expected
