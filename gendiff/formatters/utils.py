@@ -16,6 +16,7 @@ def format_value(value, depth=0):
             )
         lines.append(f"{indent}}}")
         return '\n'.join(lines)
+    # Для пустой строки возвращаем пустую строку без кавычек
     return value
 
 
@@ -25,6 +26,8 @@ def stringify_value(value):
         return 'null'
     if isinstance(value, bool):
         return str(value).lower()
+    if value == "":
+        return "''"
     if isinstance(value, dict):
         return '[complex value]'
     if isinstance(value, str):

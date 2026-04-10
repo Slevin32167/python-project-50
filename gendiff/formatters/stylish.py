@@ -5,7 +5,7 @@ from gendiff.formatters.utils import format_value
 
 def format_stylish(diff, depth=0):
     """Форматирует словарь различий в стиле stylish."""
-    indent = '  ' * depth  # 2 пробела на уровень глубины
+    indent = '  ' * depth
     lines = ['{']
 
     for key, value in diff.items():
