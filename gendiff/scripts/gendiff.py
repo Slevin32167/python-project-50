@@ -4,7 +4,7 @@
 """
 
 import argparse
-from gendiff.parser import parse_file
+from gendiff.scripts.parser import parse_file
 from gendiff.formatters import format_stylish, format_plain, format_json
 
 

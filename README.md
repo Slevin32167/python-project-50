@@ -1,22 +1,31 @@
-# Difference Calculator (gendiff)
+# Вычислитель отличий (Difference Calculator)
 
 [![Python CI](https://github.com/Slevin32167/python-project-50/actions/workflows/ci.yml/badge.svg)](https://github.com/Slevin32167/python-project-50/actions/workflows/ci.yml)
-[![Maintainability](https://api.codeclimate.com/v1/badges/your-badge-id/maintainability)](https://codeclimate.com/github/Slevin32167/python-project-50/maintainability)
-[![Test Coverage](https://sonarcloud.io/api/project_badges/measure?project=python-project-50&metric=coverage)](https://sonarcloud.io/summary/new_code?id=python-project-50)
+[![hexlet-check](https://github.com/Slevin32167/python-project-50/actions/workflows/hexlet-check.yml/badge.svg)](https://github.com/Slevin32167/python-project-50/actions/workflows/hexlet-check.yml)
 
-## Description
+## Описание
 
-**Difference Calculator** is a CLI tool that compares two configuration files (JSON, YAML) and shows the differences between them.
+**Difference Calculator** — это утилита командной строки для сравнения двух конфигурационных файлов. Она находит различия в структурах и отображает их в наглядном формате. Проект поддерживает файлы форматов **JSON** и **YAML**, а также умеет рекурсивно обрабатывать вложенные структуры.
 
-## Installation
+## Возможности
+
+*   **Поддержка форматов**: JSON (.json), YAML (.yml, .yaml).
+*   **Три формата вывода**:
+    *   `stylish` (по умолчанию) — наглядное дерево с символами `+` и `-`.
+    *   `plain` — текстовое описание изменений.
+    *   `json` — машинно-читаемый вывод для интеграции.
+*   **Рекурсивное сравнение** вложенных структур.
+*   **CI/CD**: автоматическая проверка кода с помощью GitHub Actions.
+
+## Установка и использование
+
+### Требования
+
+*   Python версии 3.10 или выше.
+*   Инструмент `uv` (рекомендуется) или `pip`.
+
+### 1. Клонирование репозитория
 
 ```bash
-pip install gendiff
-### Hexlet tests and linter status:
-[![Actions Status](https://github.com/Slevin32167/python-project-50/actions/workflows/hexlet-check.yml/badge.svg)](https://github.com/Slevin32167/python-project-50/actions)
-
-## Usage
-
-### JSON files
-```bash
-gendiff file.json file2.json
+git clone https://github.com/Slevin32167/python-project-50.git
+cd python-project-50
