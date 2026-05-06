@@ -1,21 +1,21 @@
 install:
-	poetry install
+	uv sync
 
 test:
-	poetry run pytest
+	uv run pytest
 
 test-coverage:
-	poetry run pytest --cov=gendiff --cov-report=xml:coverage.xml
+	uv run pytest --cov=gendiff --cov-report=xml:coverage.xml
 
 lint:
-	poetry run flake8 gendiff
+	uv run flake8 gendiff
 
 selfcheck:
-	poetry check
+	uv check
 
 check: selfcheck lint test
 
 build:
-	poetry build
+	uv build
 
 .PHONY: install test test-coverage lint selfcheck check build
