@@ -1,4 +1,4 @@
-name: Python CI
+name: Python CI with SonarCloud
 
 on:
   push:
@@ -12,11 +12,13 @@ jobs:
 
     steps:
     - uses: actions/checkout@v4
+      with:
+        fetch-depth: 0  # SonarCloud нужна полная история
 
     - name: Set up Python
       uses: actions/setup-python@v5
       with:
-        python-version: '3.10'
+        python-version: '3.12'  # Должно совпадать с requires-python в pyproject.toml
 
     - name: Install uv
       run: |
@@ -26,16 +28,24 @@ jobs:
     - name: Install dependencies
       run: |
         uv sync
-        uv add --dev flake8 pytest pytest-cov
 
     - name: Run linter
       run: |
-        uv run flake8 gendiff
+        make lint
 
-    - name: Run tests
+    - name: Run tests with coverage
       run: |
-        uv run pytest
+        make test-coverage
 
-    - name: Run test coverage
-      run: |
-        uv run pytest --cov=gendiff --cov-report=xml
+    - name: SonarCloud Scan
+      uses: SonarSource/sonarcloud-github-action@v2
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+      with:
+        args: >
+          -Dsonar.organization=Slevin32167
+          -Dsonar.projectKey=python-project-50
+          -Dsonar.python.coverage.reportPaths=coverage.xml
+          -Dsonar.coverage.exclusions=tests/**,**/__init__.py
+          -Dsonar.exclusions=tests/**,**/__init__.py
