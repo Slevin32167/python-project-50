@@ -11,8 +11,8 @@ def read_file(file_path):
 
 
 def get_fixture_path(filename):
-    """Возвращает путь к файлу в папке fixtures."""
-    return os.path.join('tests', 'fixtures', filename)
+    """Возвращает путь к тестовому файлу."""
+    return os.path.join('tests', 'test_data', filename)
 
 
 def get_expected_path(filename):

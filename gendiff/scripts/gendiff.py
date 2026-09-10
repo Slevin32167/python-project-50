@@ -4,8 +4,9 @@
 """
 
 import argparse
+
+from gendiff.formatters import format_json, format_plain, format_stylish
 from gendiff.scripts.parser import parse_file
-from gendiff.formatters import format_stylish, format_plain, format_json
 
 
 def build_diff(data1, data2):

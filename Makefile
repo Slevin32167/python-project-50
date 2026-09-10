@@ -8,14 +8,11 @@ test-coverage:
 	uv run pytest --cov=gendiff --cov-report=xml:coverage.xml
 
 lint:
-	uv run flake8 gendiff
+	uv run ruff check gendiff
 
-selfcheck:
-	uv check
-
-check: selfcheck lint test
+check: lint test
 
 build:
 	uv build
 
-.PHONY: install test test-coverage lint selfcheck check build
+.PHONY: install test test-coverage lint check build
